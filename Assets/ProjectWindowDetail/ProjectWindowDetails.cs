@@ -66,6 +66,8 @@ namespace ProjectWindowDetail
 			{
 				return;
 			}
+			
+			var windowWidth = rect.width;
 
 			if (Event.current.type == EventType.MouseDown &&
 				Event.current.button == 0 &&
@@ -104,6 +106,26 @@ namespace ProjectWindowDetail
 				// this entry could be Favourites or Packages. Ignore it.
 				return;
 			}
+			
+			var allDetailsLength = 0f;
+			for (var i = _details.Count - 1; i >= 0; i--)
+			{
+				var detail = _details[i];
+				if (!detail.Visible)
+				{
+					continue;
+				}
+
+				allDetailsLength += detail.ColumnWidth;
+			}
+
+			var assetLength = 30 + MenuIconWidth + asset.name.Length * 2.2f + _details.Count * SpaceBetweenColumns;
+			var maxDetailSpace = windowWidth - assetLength;
+			if (allDetailsLength > maxDetailSpace)
+			{
+				return;
+			}
+
 
 			for (var i = _details.Count - 1; i >= 0; i--)
 			{
@@ -122,8 +144,7 @@ namespace ProjectWindowDetail
 
 		private static void DrawMenuIcon(Rect rect)
 		{
-			rect.y += 4;
-			var icon = EditorGUIUtility.IconContent("d_LookDevPaneOption");
+			var icon = EditorGUIUtility.IconContent("T_Project_Window_Detail_Icon");
 			EditorGUI.LabelField(rect, icon);
 		}
 
